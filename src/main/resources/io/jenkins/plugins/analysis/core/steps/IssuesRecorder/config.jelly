@@ -20,4 +20,10 @@
     <i:publish-parameters/>
   </f:advanced>
 
+  <j:if test="${descriptor.hasOutputDescriptors()}">
+    <f:entry title="Outputs">
+      <f:hetero-list name="outputs" items="${instance.outputs}" hasHeader="true"
+        descriptors="${descriptor.outputDescriptors}"/>
+    </f:entry>
+  </j:if>
 </j:jelly>

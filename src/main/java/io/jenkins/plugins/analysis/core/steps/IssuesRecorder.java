@@ -13,11 +13,11 @@ import org.apache.commons.lang3.StringUtils;
 import edu.hm.hafner.analysis.Severity;
 import edu.hm.hafner.util.VisibleForTesting;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
-
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.jenkinsci.Symbol;
+import io.jenkins.plugins.analysis.core.extension.warnings.Output;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -36,6 +36,7 @@ import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
+import hudson.DescriptorExtensionList;
 
 import io.jenkins.plugins.analysis.core.filter.RegexpFilter;
 import io.jenkins.plugins.analysis.core.model.AnalysisResult;
@@ -88,6 +89,7 @@ public class IssuesRecorder extends Recorder implements SimpleBuildStep {
     private final Thresholds thresholds = new Thresholds();
 
     private List<RegexpFilter> filters = new ArrayList<>();
+    private List<? extends Output> outputs = new ArrayList<>();
 
     private boolean isEnabledForFailure;
     private boolean isAggregatingResults;
@@ -605,6 +607,15 @@ public class IssuesRecorder extends Recorder implements SimpleBuildStep {
         this.filters = new ArrayList<>(filters);
     }
 
+    public List<? extends Output> getOutputs() {
+        return outputs;
+    }
+
+    @DataBoundSetter
+    public void setOutputs(final List<? extends Output> outputs) {
+        this.outputs = new ArrayList<>(outputs);
+    }
+
     @Override
     public Descriptor getDescriptor() {
         return (Descriptor) super.getDescriptor();
@@ -714,7 +725,7 @@ public class IssuesRecorder extends Recorder implements SimpleBuildStep {
         IssuesPublisher publisher = new IssuesPublisher(run, report,
                 new HealthDescriptor(healthy, unhealthy, minimumSeverity), new QualityGate(thresholds),
                 reportName, referenceJobName, ignoreQualityGate, ignoreFailedBuilds, getSourceCodeCharset(),
-                new LogHandler(listener, loggerName, report.getReport()));
+                new LogHandler(listener, loggerName, report.getReport()),  getOutputs());
         publisher.attachAction();
     }
 
@@ -833,6 +844,14 @@ public class IssuesRecorder extends Recorder implements SimpleBuildStep {
          */
         public FormValidation doCheckUnhealthy(@QueryParameter final int healthy, @QueryParameter final int unhealthy) {
             return model.validateUnhealthy(healthy, unhealthy);
+        }
+
+        public DescriptorExtensionList<Output,hudson.model.Descriptor<Output>> getOutputDescriptors() {
+            return Jenkins.getInstance().getDescriptorList(Output.class);
+        }
+
+        public boolean hasOutputDescriptors() {
+            return Jenkins.getInstance().getDescriptorList(Output.class).size() > 0;
         }
     }
 }

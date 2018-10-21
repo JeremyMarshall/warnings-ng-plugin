@@ -1,6 +1,7 @@
 package io.jenkins.plugins.analysis.core.steps;
 
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,6 +30,8 @@ import io.jenkins.plugins.analysis.core.model.ResultSelector;
 import static io.jenkins.plugins.analysis.core.model.AnalysisHistory.JobResultEvaluationMode.*;
 import static io.jenkins.plugins.analysis.core.model.AnalysisHistory.QualityGateEvaluationMode.*;
 
+import io.jenkins.plugins.analysis.core.extension.warnings.Output;
+
 /**
  * Publishes issues: Stores the created issues in an {@link AnalysisResult}. The result is attached to the {@link Run}
  * by registering a {@link ResultAction}.
@@ -46,12 +49,14 @@ class IssuesPublisher {
     private final QualityGateEvaluationMode qualityGateEvaluationMode;
     private final JobResultEvaluationMode jobResultEvaluationMode;
     private final LogHandler logger;
+    private final List<? extends Output> outputs;
 
     @SuppressWarnings("ParameterNumber")
     IssuesPublisher(final Run<?, ?> run, final AnnotatedReport report,
             final HealthDescriptor healthDescriptor, final QualityGate qualityGate,
             final String name, final String referenceJobName, final boolean ignoreQualityGate,
-            final boolean ignoreFailedBuilds, final Charset sourceCodeEncoding, final LogHandler logger) {
+            final boolean ignoreFailedBuilds, final Charset sourceCodeEncoding, final LogHandler logger,
+            final List<? extends Output> outputs) {
         this.report = report;
         this.run = run;
         this.healthDescriptor = healthDescriptor;
@@ -62,6 +67,7 @@ class IssuesPublisher {
         qualityGateEvaluationMode = ignoreQualityGate ? IGNORE_QUALITY_GATE : SUCCESSFUL_QUALITY_GATE;
         jobResultEvaluationMode = ignoreFailedBuilds ? NO_JOB_FAILURE : IGNORE_JOB_RESULT;
         this.logger = logger;
+        this.outputs = outputs;
     }
 
     private String getId() {
@@ -86,7 +92,7 @@ class IssuesPublisher {
         ResultAction action = new ResultAction(run, result, healthDescriptor, getId(), name, sourceCodeEncoding);
         run.addAction(action);
 
-        run.addOrReplaceAction(new AggregationAction());
+        outputs.forEach( (o) -> o.doOutput(this.run, logger.getListener().getLogger(), result));
 
         return action;
     }

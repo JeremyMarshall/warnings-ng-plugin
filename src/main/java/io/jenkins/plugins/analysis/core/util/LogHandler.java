@@ -19,6 +19,7 @@ public class LogHandler {
     private final ToolLogger logger;
     private int infoPosition = 0;
     private int errorPosition = 0;
+    private final TaskListener listener;
 
     /**
      * Creates a new {@link LogHandler}.
@@ -52,6 +53,7 @@ public class LogHandler {
         errorLogger = createErrorLogger(listener, name);
         this.infoPosition = infoPosition;
         this.errorPosition = errorPosition;
+        this.listener = listener;
     }
 
     private ToolLogger createErrorLogger(final TaskListener listener, final String name) {
@@ -60,6 +62,10 @@ public class LogHandler {
 
     private ToolLogger createLogger(final TaskListener listener, final String name) {
         return new ToolLogger(listener.getLogger(), name);
+    }
+
+    public TaskListener getListener() {
+        return this.listener;
     }
 
     /**
