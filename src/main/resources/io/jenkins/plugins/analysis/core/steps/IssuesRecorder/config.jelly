@@ -20,4 +20,8 @@
     <i:publish-parameters/>
   </f:advanced>
 
+   <f:entry title="Outputs">
+     <f:hetero-list name="outputs" items="${instance.outputs}" hasHeader="true"
+      descriptors="${descriptor.outputDescriptors}"/>
+   </f:entry>
 </j:jelly>

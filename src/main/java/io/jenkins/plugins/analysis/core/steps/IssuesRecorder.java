@@ -18,6 +18,8 @@ import org.kohsuke.stapler.QueryParameter;
 import edu.hm.hafner.analysis.Severity;
 import edu.hm.hafner.util.VisibleForTesting;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
+import io.jenkins.plugins.analysis.core.extension.warnings.Output;
+import io.jenkins.plugins.analysis.core.extension.warnings.OutputDescriptor;
 import io.jenkins.plugins.analysis.core.filter.RegexpFilter;
 import io.jenkins.plugins.analysis.core.model.AnalysisResult;
 import io.jenkins.plugins.analysis.core.model.ReportScanningTool;
@@ -33,13 +35,15 @@ import io.jenkins.plugins.analysis.core.scm.NullBlamer;
 import io.jenkins.plugins.analysis.core.util.EnvironmentResolver;
 import io.jenkins.plugins.analysis.core.util.LogHandler;
 import io.jenkins.plugins.analysis.core.views.ResultAction;
+import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
-
+import hudson.DescriptorExtensionList;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
+import hudson.model.Descriptor;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -87,6 +91,7 @@ public class IssuesRecorder extends Recorder implements SimpleBuildStep {
     private final Thresholds thresholds = new Thresholds();
 
     private List<RegexpFilter> filters = new ArrayList<>();
+    private List<? extends Output> outputs = new ArrayList<>();
 
     private boolean isEnabledForFailure;
     private boolean isAggregatingResults;
@@ -539,6 +544,15 @@ public class IssuesRecorder extends Recorder implements SimpleBuildStep {
         this.filters = new ArrayList<>(filters);
     }
 
+    public List<? extends Output> getOutputs() {
+        return outputs;
+    }
+
+    @DataBoundSetter
+    public void setOutputs(final List<? extends Output> outputs) {
+        this.outputs = new ArrayList<>(outputs);
+    }
+
     @Override
     public Descriptor getDescriptor() {
         return (Descriptor) super.getDescriptor();
@@ -771,6 +785,10 @@ public class IssuesRecorder extends Recorder implements SimpleBuildStep {
          */
         public FormValidation doCheckUnhealthy(@QueryParameter final int healthy, @QueryParameter final int unhealthy) {
             return model.validateUnhealthy(healthy, unhealthy);
+        }
+
+        public static DescriptorExtensionList<Output,hudson.model.Descriptor<Output>> getOutputDescriptors() {
+            return Jenkins.getInstance().getDescriptorList(Output.class);
         }
     }
 }
