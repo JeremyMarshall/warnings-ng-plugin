@@ -4,7 +4,10 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import edu.hm.hafner.analysis.Issue;
+
 import hudson.Extension;
+
 
 public class Test2 extends Output {
 
@@ -30,11 +33,26 @@ public class Test2 extends Output {
     public final void setField2(final String field2) {
         this.field2 = field2;
     }
+
+    @Override
+    public final void newIssue(final Issue issue){
+
+    }
+    @Override
+    public final void outstandingIssue(final Issue issue){
+
+    }
+
+    @Override
+    public final void fixedIssue(final Issue issue) {
+    }
+
+
     @Symbol("test2")
     @Extension
     public static final class DescriptorImpl extends OutputDescriptor {
-        // @Override public String getDisplayName() {
-        //     return "Test Two";
-        // }
+        @Override public String getDisplayName() {
+            return "Test Two";
+        }
     }
 }

@@ -659,7 +659,7 @@ public class IssuesRecorder extends Recorder implements SimpleBuildStep {
         IssuesPublisher publisher = new IssuesPublisher(run, report,
                 new HealthDescriptor(healthy, unhealthy, minimumSeverity), new QualityGate(thresholds),
                 name, referenceJobName, ignoreQualityGate, ignoreFailedBuilds, getSourceCodeCharset(),
-                new LogHandler(listener, loggerName, report.getReport()));
+                new LogHandler(listener, loggerName, report.getReport()), getOutputs());
         publisher.attachAction();
     }
 
