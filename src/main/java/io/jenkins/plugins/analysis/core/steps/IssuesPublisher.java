@@ -1,6 +1,7 @@
 package io.jenkins.plugins.analysis.core.steps;
 
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
