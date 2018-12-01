@@ -19,7 +19,6 @@ import edu.hm.hafner.analysis.Severity;
 import edu.hm.hafner.util.VisibleForTesting;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import io.jenkins.plugins.analysis.core.extension.warnings.Output;
-import io.jenkins.plugins.analysis.core.extension.warnings.OutputDescriptor;
 import io.jenkins.plugins.analysis.core.filter.RegexpFilter;
 import io.jenkins.plugins.analysis.core.model.AnalysisResult;
 import io.jenkins.plugins.analysis.core.model.ReportScanningTool;
@@ -43,7 +42,6 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
-import hudson.model.Descriptor;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -787,7 +785,7 @@ public class IssuesRecorder extends Recorder implements SimpleBuildStep {
             return model.validateUnhealthy(healthy, unhealthy);
         }
 
-        public static DescriptorExtensionList<Output,hudson.model.Descriptor<Output>> getOutputDescriptors() {
+        public DescriptorExtensionList<Output,hudson.model.Descriptor<Output>> getOutputDescriptors() {
             return Jenkins.getInstance().getDescriptorList(Output.class);
         }
     }

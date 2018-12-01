@@ -45,7 +45,6 @@ class IssuesPublisher {
     private final QualityGateEvaluationMode qualityGateEvaluationMode;
     private final JobResultEvaluationMode jobResultEvaluationMode;
     private final LogHandler logger;
-    private final String id;
     private final List<? extends Output> outputs;
 
     @SuppressWarnings("ParameterNumber")

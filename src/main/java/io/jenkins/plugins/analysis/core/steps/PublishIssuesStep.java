@@ -3,7 +3,6 @@ package io.jenkins.plugins.analysis.core.steps;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -446,8 +445,8 @@ public class PublishIssuesStep extends Step {
 
         @Override
         protected ResultAction run() throws IOException, InterruptedException, IllegalStateException {
-            IssuesPublisher publisher = new IssuesPublisher(getRun(), report.getReport(), report.getBlames(), filters, 
-                    healthDescriptor, qualityGate, name, referenceJobName, ignoreQualityGate, ignoreFailedBuilds,
+            IssuesPublisher publisher = new IssuesPublisher(getRun(), report, healthDescriptor, qualityGate,
+                    name, referenceJobName, ignoreQualityGate, ignoreFailedBuilds,
                     getCharset(sourceCodeEncoding), getLogger(), Collections.emptyList());
             return publisher.attachAction();
         }
