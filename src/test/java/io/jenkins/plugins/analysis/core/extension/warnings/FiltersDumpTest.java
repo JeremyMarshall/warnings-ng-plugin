@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.*;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
 import hudson.model.Run;
-import hudson.util.IOException2;
 
 /**
  * Integration tests of the regex property filters.
@@ -52,7 +51,7 @@ public class FiltersDumpTest extends IntegrationTestWithJenkinsPerSuite {
             buildAndVerifyResults(project, entry.getValue());
 
             Run<?, ?> run = buildWithStatus(project, Result.SUCCESS);
-            assertThat(run.getLogFile().toString().endsWith("bbb"));
+            assertThatLogContains(run, "Outstanding");
         }
     }
 

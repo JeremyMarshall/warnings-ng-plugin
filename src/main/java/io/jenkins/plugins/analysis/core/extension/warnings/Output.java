@@ -24,26 +24,30 @@ public abstract class Output extends AbstractDescribableImpl<Output> implements 
     public final void doOutput(final PrintStream logger, final AnalysisResult report) {
         this.logger = logger;
 
-        //if( report.getNewIssues().size() > 0) {
-            //newIssuePrepare();
-            for (Issue issue : report.getNewIssues()) {
-                newIssue(issue);
-            }
-        //}
-        
-        //if( report.getOutstandingIssues().size() > 0) {
-            //outstandingIssuePrepare();
-            for (Issue issue : report.getOutstandingIssues()) {
-                outstandingIssue(issue);
-            }
-        //}
+        if(report.getNewIssues().size() + report.getOutstandingIssues().size() + report.getFixedIssues().size() > 0) {
+            prepare();
+        }
 
-        //if( report.getFixedIssues().size() > 0) {
-            //fixedIssuePrepare();
-            for (Issue issue : report.getFixedIssues()) {
-                fixedIssue(issue);
+        if( report.getNewIssues().size() > 0) {
+            newIssuePrepare();
+            for (Issue issue : report.getNewIssues()) {
+                newIssue(issue.getMessage(), issue.getFileName(), issue.getLineStart());
             }
-        //}
+        }
+        
+        if( report.getOutstandingIssues().size() > 0) {
+            outstandingIssuePrepare();
+            for (Issue issue : report.getOutstandingIssues()) {
+                outstandingIssue(issue.getMessage(), issue.getFileName(), issue.getLineStart());
+            }
+        }
+
+        if( report.getFixedIssues().size() > 0) {
+            fixedIssuePrepare();
+            for (Issue issue : report.getFixedIssues()) {
+                fixedIssue(issue.getMessage(), issue.getFileName(), issue.getLineStart());
+            }
+        }
     }
 
     protected void log(String var1) {
@@ -54,12 +58,12 @@ public abstract class Output extends AbstractDescribableImpl<Output> implements 
         logger.printf(var1, var2);
         logger.println();
     }
-
+    public void prepare() { }
     public void newIssuePrepare() { }
     public void outstandingIssuePrepare() { }
     public void fixedIssuePrepare() { }
 
-    public abstract void newIssue(final Issue issue);
-    public abstract void outstandingIssue(final Issue issue);
-    public abstract void fixedIssue(final Issue issue);
+    public abstract void newIssue(final String message, final String filename, final int lineStart);
+    public abstract void outstandingIssue(final String message, final String filename, final int lineStart);
+    public abstract void fixedIssue(final String message, final String filename, final int lineStart);
 }

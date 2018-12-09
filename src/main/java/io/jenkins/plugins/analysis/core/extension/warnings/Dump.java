@@ -19,8 +19,8 @@ public class Dump extends Output {
     }
 
     @Override
-    public final void newIssue(final Issue issue){
-        log("Issue '%s','%s','%d'", issue.getMessage(), issue.getFileName(), issue.getLineStart());
+    public final void newIssue(final String message, final String filename, final int lineStart){
+        log("Issue '%s','%s','%d'", message, filename, lineStart);
     }
 
     @Override
@@ -29,8 +29,8 @@ public class Dump extends Output {
     }
 
     @Override
-    public final void outstandingIssue(final Issue issue){
-        log("Issue '%s','%s','%d'",  issue.getMessage(), issue.getFileName(), issue.getLineStart());
+    public final void outstandingIssue(final String message, final String filename, final int lineStart){
+        log("Issue '%s','%s','%d'", message, filename, lineStart);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class Dump extends Output {
     }
 
     @Override
-    public final void fixedIssue(final Issue issue){
-         log("Issue '%s','%s','%d'", issue.getMessage(), issue.getFileName(), issue.getLineStart());
+    public final void fixedIssue(final String message, final String filename, final int lineStart){
+        log("Issue '%s','%s','%d'", message, filename, lineStart);
     }
 
     @Symbol("dumpIssues")

@@ -35,16 +35,16 @@ public class Test2 extends Output {
     }
 
     @Override
-    public final void newIssue(final Issue issue){
+    public final void newIssue(final String message, final String filename, final int lineStart){
 
     }
     @Override
-    public final void outstandingIssue(final Issue issue){
+    public final void outstandingIssue(final String message, final String filename, final int lineStart){
 
     }
 
     @Override
-    public final void fixedIssue(final Issue issue) {
+    public final void fixedIssue(final String message, final String filename, final int lineStart) {
     }
 
 
