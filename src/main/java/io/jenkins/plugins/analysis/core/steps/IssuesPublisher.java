@@ -87,7 +87,7 @@ class IssuesPublisher {
         ResultAction action = new ResultAction(run, result, healthDescriptor, getId(), name, sourceCodeEncoding);
         run.addAction(action);
 
-        outputs.forEach( (o) -> o.doOutput(logger.getListener().getLogger(), result));
+        outputs.forEach( (o) -> o.doOutput(this.run, logger.getListener().getLogger(), result));
 
         return action;
     }

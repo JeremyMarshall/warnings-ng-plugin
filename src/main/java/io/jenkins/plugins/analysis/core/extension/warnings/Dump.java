@@ -14,8 +14,8 @@ public class Dump extends Output {
     }
 
     @Override
-    public final void newIssuePrepare() {
-        log("New");
+    public final void newIssuePrepare(final int size) {
+        log("New %d", size);
     }
 
     @Override
@@ -24,8 +24,8 @@ public class Dump extends Output {
     }
 
     @Override
-    public final void outstandingIssuePrepare() {
-        log("Outstanding");
+    public final void outstandingIssuePrepare(final int size) {
+        log("Outstanding %d", size);
     }
 
     @Override
@@ -34,8 +34,8 @@ public class Dump extends Output {
     }
 
     @Override
-    public final void fixedIssuePrepare() {
-        log("Fixed");
+    public final void fixedIssuePrepare(final int size) {
+        log("Fixed %d", size);
     }
 
     @Override

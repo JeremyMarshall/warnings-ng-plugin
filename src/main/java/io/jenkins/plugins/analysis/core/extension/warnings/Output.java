@@ -8,12 +8,14 @@ import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 
 import edu.hm.hafner.analysis.Issue;
+import hudson.model.Run;
 import io.jenkins.plugins.analysis.core.model.AnalysisResult;
 import jenkins.model.Jenkins;
 
 public abstract class Output extends AbstractDescribableImpl<Output> implements ExtensionPoint, Describable<Output>  { 
 
     volatile private PrintStream logger;
+    volatile private Run<?, ?> run;
     /**
      * All registered {@link Output}s.
      */
@@ -21,29 +23,32 @@ public abstract class Output extends AbstractDescribableImpl<Output> implements 
         return Jenkins.getInstance().getExtensionList(Output.class); 
     }
 
-    public final void doOutput(final PrintStream logger, final AnalysisResult report) {
+    public final void doOutput( final Run<?, ?> run, final PrintStream logger, final AnalysisResult report) {
         this.logger = logger;
+        this.run = run;
 
         if(report.getNewIssues().size() + report.getOutstandingIssues().size() + report.getFixedIssues().size() > 0) {
-            prepare();
+            if (!prepare(run)) {
+                return;
+            }
         }
 
         if( report.getNewIssues().size() > 0) {
-            newIssuePrepare();
+            newIssuePrepare(report.getNewIssues().size());
             for (Issue issue : report.getNewIssues()) {
                 newIssue(issue.getMessage(), issue.getFileName(), issue.getLineStart());
             }
         }
         
         if( report.getOutstandingIssues().size() > 0) {
-            outstandingIssuePrepare();
+            outstandingIssuePrepare(report.getOutstandingIssues().size());
             for (Issue issue : report.getOutstandingIssues()) {
                 outstandingIssue(issue.getMessage(), issue.getFileName(), issue.getLineStart());
             }
         }
 
         if( report.getFixedIssues().size() > 0) {
-            fixedIssuePrepare();
+            fixedIssuePrepare(report.getFixedIssues().size());
             for (Issue issue : report.getFixedIssues()) {
                 fixedIssue(issue.getMessage(), issue.getFileName(), issue.getLineStart());
             }
@@ -58,10 +63,10 @@ public abstract class Output extends AbstractDescribableImpl<Output> implements 
         logger.printf(var1, var2);
         logger.println();
     }
-    public void prepare() { }
-    public void newIssuePrepare() { }
-    public void outstandingIssuePrepare() { }
-    public void fixedIssuePrepare() { }
+    public boolean prepare(final Run<?, ?> run) { return true; }
+    public void newIssuePrepare(final int size) { }
+    public void outstandingIssuePrepare(final int size) { }
+    public void fixedIssuePrepare(final int size) { }
 
     public abstract void newIssue(final String message, final String filename, final int lineStart);
     public abstract void outstandingIssue(final String message, final String filename, final int lineStart);
